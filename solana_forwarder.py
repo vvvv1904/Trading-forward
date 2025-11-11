@@ -22,12 +22,13 @@ from telethon import TelegramClient, events, errors
 # --------------------
 API_ID = int(os.getenv("API_ID", "29320735"))           # replace or export
 API_HASH = os.getenv("API_HASH", "8fd644cefa5e3e644f913afb594ec01d")
-SESSION_NAME = os.getenv("session_name.session", "session_name.session-journal")  # Telethon session filename
+SESSION_NAME = os.getenv("TELEGRAM_SESSION_NAME", "anon")  # Telethon session filename
+client = TelegramClient(SESSION_NAME, API_ID, API_HASH)
 # Provide target channels as comma-separated list. Examples:
 # - single numeric ID: -1002177594166
 # - single username: @somechannel
 # - multiple: -1002177594166,@AnotherChannel
-RAW_TARGET_CHANNELS = os.getenv("TARGET_CHANNELS", "-1002604509392") 
+RAW_TARGET_CHANNELS = os.getenv("TARGET_CHANNELS", "-1002307208059") 
 TRADING_BOT = os.getenv("TRADING_BOT", "WizGandalfBot")  # destination bot username or id
 SQLITE_DB = os.getenv("SQLITE_DB", "forwarder_state.db")
 LOGFILE = os.getenv("LOGFILE", "relay.log")
@@ -114,7 +115,7 @@ async def main():
     dedupe = DedupeStore(SQLITE_DB)
 
     # Telethon client
-    client = TelegramClient(SESSION_NAME, API_ID, API_HASH)
+    client = TelegramClient('anon', API_ID, API_HASH)
 
     @client.on(events.NewMessage(chats=targets))
     async def new_msg_handler(event: events.NewMessage.Event):
@@ -189,4 +190,3 @@ if __name__ == "__main__":
         asyncio.run(main())
     except KeyboardInterrupt:
         log.info("Interrupted by user, exiting.")
-
